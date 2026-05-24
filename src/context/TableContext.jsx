@@ -28,9 +28,7 @@ const TableProvider = ({ children }) => {
   } = useTableSort(filter.filtered);
 
   const edit = useTableEdit(data, setData);
-
   const pagination = useTablePagination(sortedData);
-
   useUnsavedWarning(edit.editingId);
 
   return (
