@@ -1,15 +1,7 @@
 import { useState } from "react";
 import { useTable } from "../context/TableContext";
 import { validate } from "../utils/validate";
-
-const DEPT_COLORS = {
-  HR:      "dept-hr",
-  IT:      "dept-it",
-  Finance: "dept-finance",
-  Sales:   "dept-sales",
-};
-
-
+import { Departments } from "../utils/departments";
 const TableRow = ({ row }) => {
   const { editingId, draft, setDraft, startEdit, saveEdit, cancelEdit, undoEdit, isChanged, departments } = useTable();
   const [errors, setErrors] = useState({});
@@ -59,7 +51,7 @@ const TableRow = ({ row }) => {
             {departments.map((d) => <option key={d} value={d}>{d}</option>)}
           </select>
         ) : (
-          <span className={`dept-badge ${DEPT_COLORS[row.department] || ""}`}>{row.department}</span>
+          <span className={`dept-badge ${Departments[row.department] || ""}`}>{row.department}</span>
         )}
       </div>
 

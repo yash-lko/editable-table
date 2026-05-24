@@ -1,7 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
 import { generateData } from "../utils/generateData";
-
 import useTableFilter from "../hooks/useTableFilter";
 import useTableSort from "../hooks/useTableSort";
 import useTableEdit from "../hooks/useTableEdit";

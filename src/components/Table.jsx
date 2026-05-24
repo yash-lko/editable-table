@@ -1,6 +1,5 @@
 import { useTable } from "../context/TableContext";
 import { FixedSizeList as List } from "react-window";
-
 import PageHeader from "./PageHeader";
 import Toolbar from "./Toolbar";
 import TableHeader from "./TableHeader";
@@ -33,39 +32,24 @@ const Table = () => {
     );
   }
 
-  
-// throw new Error(
-//   "The application encountered an unexpected problem while loading the employee table data. Please refresh the page or try again later."
-// );
-
   return (
     <div className="app">
-
       <PageHeader />
-
       <div className="table-container">
-
         <Toolbar />
-
         <TableHeader />
-
         <div className="table-scroll">
-
           {sortedData.length === 0 ? (
-
             <div className="no-results">
               <h2>No Results Found</h2>
             </div>
-
           ) : usePagination ? (
-
             pageData.map((row) => (
               <TableRow
                 key={row.id}
                 row={row}
               />
             ))
-
           ) : (
 
             <List
