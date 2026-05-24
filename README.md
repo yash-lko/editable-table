@@ -1,98 +1,179 @@
 # Editable Data Table — React
 
-Advanced editable table with 10,000+ rows, virtual scrolling, pagination, sorting, filtering, and Context API state management.
+A high-performance editable data table built with React that handles **10,000+ rows** with virtual scrolling, sorting, filtering, inline editing, pagination, CSV export, and robust state management using Context API + custom hooks.
 
 ---
 
-## Setup
+## 🚀 Tech Stack
+
+* React (Vite)
+* Context API (state management)
+* react-window (virtual scrolling)
+* LocalStorage (data persistence)
+* Custom Hooks architecture
+* Plain CSS (custom UI)
+
+---
+
+## ⚙️ Setup
 
 ```bash
 npm install --legacy-peer-deps
 npm run dev
 ```
 
-> `--legacy-peer-deps` is needed because `react-window` hasn't declared React 19 peer support yet.
+> Required due to `react-window` peer dependency compatibility with React 19.
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
   context/
-    TableContext.jsx     # ALL state lives here (data, filter, sort, edit, pagination)
+    TableContext.jsx        # Global state (data, filter, sort, edit, pagination)
+
   components/
-    Table.jsx            # Root — renders layout, reads context
-    PageHeader.jsx       # Title + stat cards
-    Toolbar.jsx          # Search, filter, export, pagination toggle
-    TableHeader.jsx      # Sortable column headers
-    TableRow.jsx         # Single row — view or edit mode
-    EditableField.jsx    # Reusable input with error message
-    DeptBadge.jsx        # Colored department pill
-    RowActions.jsx       # Edit/Save/Cancel/Undo buttons
-    Pagination.jsx       # Page controls with ellipsis
+    Table.jsx               # Main table container
+    PageHeader.jsx          # Stats + header info
+    Toolbar.jsx             # Search, filter, export, toggle pagination
+    TableHeader.jsx         # Sortable column headers
+    TableRow.jsx            # Row (view/edit mode)
+    Pagination.jsx          # Page controls
+    ErrorFallback.jsx       # Error boundary UI
+
+  hooks/
+    useTableFilter.js
+    useTableSort.js
+    useTableEdit.js
+    useTablePagination.js
+    useUnsavedWarning.js
+
   utils/
-    generateData.js      # Generates 10,000 employee rows
-    exportToCSV.js       # Downloads filtered data as CSV
-    validate.js          # Name, email, salary validation rules
+    generateData.js         # Generates 10,000+ rows
+    exportToCSV.js          # CSV export utility
+    validate.js             # Input validation
+
   styles/
-    table.css            # All styles, dark theme
+    table.css               # UI styling
 ```
 
 ---
 
-## Architecture — Context API
+## 🧠 Architecture Overview
 
-Everything lives in `TableContext.jsx`. Components call `useTable()` and get exactly what they need — no prop drilling at all.
+State is centralized using Context API and split into logical hooks:
 
-```
-TableContext
-  ├── data, setData          (10,000 rows, persisted to localStorage)
-  ├── search, deptFilter     (filter state)
-  ├── filteredData           (memoized filtered array)
-  ├── sortField, sortOrder   (sort state)
-  ├── sortedData             (memoized sorted array)
-  ├── handleSort, sortIcon   (sort actions)
-  ├── editingId, draft       (which row is being edited + draft values)
-  ├── errors                 (live validation errors)
-  ├── startEdit, updateDraft, saveRow, cancelEdit, undoRow
-  ├── history                (original values for undo per row)
-  └── page, pageSize, pagedData, totalPages, usePagination
-```
+* Filtering → `useTableFilter`
+* Sorting → `useTableSort`
+* Editing → `useTableEdit`
+* Pagination → `useTablePagination`
 
-**Why Context over Redux?**
-The state here is a single array with UI state. Context is simpler, easier to explain, and explicitly listed in the assessment. Redux would add reducers, actions, and store boilerplate with no benefit for this use case.
+This keeps the code modular and avoids prop drilling.
 
 ---
 
-## Features
+## ✨ Features
 
-### Editable Table
-- Click ✎ to edit any row inline
-- Save validates name (min 2 chars), email (format), salary (₹1,000–₹1,00,00,000)
-- Cancel discards changes
-- Undo restores the original value — only appears if something actually changed
+### 📝 Inline Editing
 
-### Large Dataset (10,000+ rows)
-- **Virtual Scroll** (default) — `react-window` renders only visible rows, O(1) memory regardless of dataset size
-- **Pagination** (fallback) — toggle from toolbar, 10/25/50/100 rows per page
+* Click ✎ to edit rows inline
+* Save / Cancel / Undo per row
+* Field validation:
 
-### Sorting & Filtering
-- Click any column header to sort asc/desc
-- Search by name or email (live, case-insensitive)
-- Department dropdown filter
-- Clear button resets both filters
-
-### Export CSV
-- Exports current filtered + sorted view as `Employees.csv`
-
-### Persistence
-- All edits saved to `localStorage` automatically — survive page refresh
+  * Name: min 2 characters
+  * Email: valid format
+  * Salary: numeric range validation
 
 ---
 
-## Known Limitations
+### 📊 Large Dataset Handling (10,000+ rows)
 
-- `react-window` requires `--legacy-peer-deps` with React 19
-- Virtual scroll uses fixed row height (72px) — editing row with errors slightly overflows but doesn't break layout
-- No backend — data resets if `localStorage` is cleared
+* Virtual scrolling using `react-window`
+* Pagination mode as fallback
+* Optimized rendering for large datasets
+
+---
+
+### 🔃 Sorting
+
+* Single-column sorting (asc/desc toggle)
+* Active column highlighted
+* Arrow indicator shows current sort direction
+
+---
+
+### 🔍 Filtering
+
+* Search by name or email
+* Filter by department
+* Instant results with memoized filtering
+
+---
+
+### 📄 Export CSV
+
+* Export filtered + sorted data
+* Downloads as `Employees.csv`
+
+---
+
+### 💾 Persistence
+
+* All data stored in `localStorage`
+* Survives page refresh
+
+---
+
+### ⚠️ Error Handling
+
+* Global Error Boundary implemented using `react-error-boundary`
+* Prevents full app crash
+* Displays fallback UI with:
+
+  * Error message
+  * Retry button
+  * Clean user-friendly message
+
+---
+
+## 🧯 Error Boundary Setup
+
+```js
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "./components/ErrorFallback";
+
+<ErrorBoundary FallbackComponent={ErrorFallback}>
+  <App />
+</ErrorBoundary>
+```
+
+---
+
+## 🧪 Known Limitations
+
+* `react-window` requires `--legacy-peer-deps`
+* Fixed row height (72px)
+* No backend integration (uses localStorage only)
+* Multi-sort not implemented (single-column sort used for simplicity)
+
+---
+
+## 📌 Key Decisions
+
+* Context API instead of Redux (simpler, lightweight)
+* Custom hooks for separation of logic
+* Virtual scrolling for performance optimization
+* Minimal dependencies for easier evaluation
+
+---
+
+## 🎯 Summary
+
+This project demonstrates:
+
+* Handling large datasets efficiently
+* Clean React architecture
+* Modular custom hooks
+* Real-world table features (edit, sort, filter, export)
+* Performance-first UI design

@@ -3,10 +3,11 @@ import { useMemo, useState } from "react";
 const useTableFilter = (data) => {
   const [search, setSearch] = useState("");
   const [department, setDepartment] = useState("");
-  const departments = [...new Set(data.map((row) => row.department))];
+
+  const departments = [...new Set(data.map(r => r.department))];
 
   const filtered = useMemo(() => {
-    return data.filter((row) => {
+    return data.filter(row => {
       const searchMatch =
         row.name.toLowerCase().includes(search.toLowerCase()) ||
         row.email.toLowerCase().includes(search.toLowerCase());

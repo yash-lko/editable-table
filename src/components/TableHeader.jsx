@@ -3,46 +3,26 @@ import { useTable } from "../context/TableContext";
 const columns = ["id", "name", "email", "department", "salary"];
 
 const TableHeader = () => {
-
-  const {
-    sortConfig,
-    handleSort,
-  } = useTable();
-
-  const getSort = (field) => {
-    return sortConfig.find(
-      (item) => item.field === field
-    );
-  };
+  const { sortConfig, handleSort } = useTable();
 
   return (
     <div className="table-header">
-
       {columns.map((col) => {
-
-        const activeSort = getSort(col);
+        const active = sortConfig.field === col;
 
         return (
           <div
             key={col}
-            className={`header-cell ${activeSort ? "sorted" : ""}`}
+            className={`header-cell ${active ? "sorted" : ""}`}
             onClick={() => handleSort(col)}
           >
             {col.charAt(0).toUpperCase() + col.slice(1)}
-
-            {activeSort &&
-              (activeSort.dir === "asc"
-                ? " ↑"
-                : " ↓")}
+            {active && (sortConfig.direction === "asc" ? " ↑" : " ↓")}
           </div>
         );
-
       })}
 
-      <div className="header-cell">
-        Actions
-      </div>
-
+      <div className="header-cell">Actions</div>
     </div>
   );
 };

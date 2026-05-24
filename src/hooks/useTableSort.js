@@ -1,50 +1,36 @@
 import { useMemo, useState } from "react";
 
-const useTableSort = (filteredData) => {
-  const [sortConfig, setSortConfig] = useState([]);
+const useTableSort = (data) => {
+  const [sortConfig, setSortConfig] = useState({
+    field: null,
+    direction: "asc",
+  });
 
   const handleSort = (field) => {
-    setSortConfig((prev) => {
-      const exists = prev.find((item) => item.field === field);
-
-      if (exists) {
-        return prev.map((item) =>
-          item.field === field
-            ? {
-                ...item,
-                direction: item.direction === "asc" ? "desc" : "asc",
-              }
-            : item
-        );
-      }
-
-      return [...prev, { field, direction: "asc" }];
-    });
+    setSortConfig((prev) => ({
+      field,
+      direction:
+        prev.field === field && prev.direction === "asc"
+          ? "desc"
+          : "asc",
+    }));
   };
 
   const sortedData = useMemo(() => {
-    if (!sortConfig.length) return filteredData;
+    if (!sortConfig.field) return data;
 
-    return [...filteredData].sort((a, b) => {
-      for (const sort of sortConfig) {
-        const first = a[sort.field];
-        const second = b[sort.field];
+    return [...data].sort((a, b) => {
+      const x = a[sortConfig.field];
+      const y = b[sortConfig.field];
 
-        const result =
-          typeof first === "string"
-            ? sort.direction === "asc"
-              ? first.localeCompare(second)
-              : second.localeCompare(first)
-            : sort.direction === "asc"
-            ? first - second
-            : second - first;
+      const res =
+        typeof x === "string"
+          ? x.localeCompare(y)
+          : x - y;
 
-        if (result !== 0) return result;
-      }
-
-      return 0;
+      return sortConfig.direction === "asc" ? res : -res;
     });
-  }, [filteredData, sortConfig]);
+  }, [data, sortConfig]);
 
   return {
     sortConfig,
