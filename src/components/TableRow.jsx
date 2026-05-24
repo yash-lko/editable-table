@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTable } from "../context/TableContext";
+import { validate } from "../utils/validate";
 
 const DEPT_COLORS = {
   HR:      "dept-hr",
@@ -8,14 +9,6 @@ const DEPT_COLORS = {
   Sales:   "dept-sales",
 };
 
-function validate(draft) {
-  const errors = {};
-  if (!draft.name || draft.name.trim().length < 2) errors.name = "Min 2 characters";
-  if (!draft.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(draft.email)) errors.email = "Invalid email";
-  if (!draft.salary || draft.salary < 1000) errors.salary = "Min ₹1,000";
-  if (draft.salary > 10000000) errors.salary = "Too high";
-  return errors;
-}
 
 const TableRow = ({ row }) => {
   const { editingId, draft, setDraft, startEdit, saveEdit, cancelEdit, undoEdit, isChanged, departments } = useTable();
