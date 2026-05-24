@@ -53,6 +53,7 @@ src/
     generateData.js         # Generates 10,000+ rows
     exportToCSV.js          # CSV export utility
     validate.js             # Input validation
+    departments.js          # Departments color
 
   styles/
     table.css               # UI styling
@@ -155,7 +156,7 @@ import ErrorFallback from "./components/ErrorFallback";
 * `react-window` requires `--legacy-peer-deps`
 * Fixed row height (72px)
 * No backend integration (uses localStorage only)
-* Multi-sort not implemented (single-column sort used for simplicity)
+* Multi-sort implemented
 
 ---
 
