@@ -70,7 +70,7 @@ State is centralized using Context API and split into logical hooks:
 * Editing → `useTableEdit`
 * Pagination → `useTablePagination`
 
-This keeps the code modular and avoids prop drilling.
+This keeps logic modular and avoids prop drilling.
 
 ---
 
@@ -98,7 +98,7 @@ This keeps the code modular and avoids prop drilling.
 
 ### 🔃 Sorting
 
-* Single-column sorting (asc/desc toggle)
+* Single & multi-column sorting (asc/desc toggle)
 * Active column highlighted
 * Arrow indicator shows current sort direction
 
@@ -121,20 +121,60 @@ This keeps the code modular and avoids prop drilling.
 
 ### 💾 Persistence
 
-* All data stored in `localStorage`
+* All data stored in localStorage
 * Survives page refresh
 
 ---
 
 ### ⚠️ Error Handling
 
-* Global Error Boundary implemented using `react-error-boundary`
+* Global Error Boundary using `react-error-boundary`
 * Prevents full app crash
-* Displays fallback UI with:
+* Shows fallback UI with retry option
 
-  * Error message
-  * Retry button
-  * Clean user-friendly message
+---
+
+## 🧠 Challenges & Trade-offs
+
+### 1. Handling Large Dataset
+
+Used `react-window` to virtualize 10,000+ rows and avoid DOM performance issues.
+
+### 2. Sorting Complexity
+
+Implemented multi-sort logic using array-based sort configuration for flexibility.
+
+### 3. State Management Choice
+
+Chose Context API instead of Redux to keep architecture simple and lightweight.
+
+### 4. UI Stability & Error Handling
+
+The application can occasionally crash or render a blank screen if unexpected runtime errors occur in deeply nested components or large dataset operations. To handle this, a global Error Boundary was implemented using `react-error-boundary`, ensuring the UI does not break completely and instead shows a fallback screen with a retry option.
+Chose Context API instead of Redux to keep architecture simple and lightweight.
+
+### 4. Persistence Strategy
+
+Used localStorage instead of backend to reduce setup complexity.
+
+---
+
+## ⚡ Performance Optimizations
+
+* Virtualized rendering with `react-window`
+* Memoized filtering and sorting logic
+* Reduced unnecessary re-renders using derived state
+* Split logic into custom hooks
+
+---
+
+## 🚀 Future Improvements
+
+* Backend API integration (replace localStorage)
+* Row-level debouncing for edits
+* Column resizing & reordering
+* Add unit tests (Jest / React Testing Library)
+* Improve accessibility (ARIA + keyboard navigation)
 
 ---
 
@@ -151,30 +191,12 @@ import ErrorFallback from "./components/ErrorFallback";
 
 ---
 
-## 🧪 Known Limitations
-
-* `react-window` requires `--legacy-peer-deps`
-* Fixed row height (72px)
-* No backend integration (uses localStorage only)
-* Multi-sort implemented
-
----
-
-## 📌 Key Decisions
-
-* Context API instead of Redux (simpler, lightweight)
-* Custom hooks for separation of logic
-* Virtual scrolling for performance optimization
-* Minimal dependencies for easier evaluation
-
----
-
 ## 🎯 Summary
 
 This project demonstrates:
 
-* Handling large datasets efficiently
-* Clean React architecture
-* Modular custom hooks
+* Handling large datasets efficiently (10,000+ rows)
+* Clean and modular React architecture
+* Custom hooks-based state management
 * Real-world table features (edit, sort, filter, export)
 * Performance-first UI design
